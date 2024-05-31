@@ -1,0 +1,111 @@
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mediquo</title>
+  <!-- BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link rel="stylesheet" href="./assets/css/side-menu.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
+  <!-- Inclua o JavaScript do DataTables -->
+</head>
+
+<body>
+  <div class="wrapper d-flex">
+    <aside id="sidemenu">
+      <!-- IMPORT JS -->
+    </aside>
+
+    <main class="container-lg container-main">
+      <div class="faq-planilhas-licencas">
+        <div class="card p-4 border-0 rounded-4 px-5 py-4 shadow-lg my-5">
+          <div class="header-license mb-3 border-bottom">
+            <a href="./companies" class="texto-voltar text-decoration-none"><i class="fas fa-chevron-left"></i>
+              Voltar
+            </a>
+            <h1 class="fs-3 mt-3" style="text-decoration: underline;">Formatação para envio de arquivos</h1>
+            <h1 class="fs-4 mt-3">O arquivo precisa estar no formato CSV separado por ";"</h1>
+            <h2 class="fs-4 mt-3">
+              Disposição do cabeçalho precisa seguir as seguintes ordem de colunas:
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li>Não deixar linhas em branco</li>
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li><span class="texto-bold">"cpf"</span>: obrigatorio e valido</li>
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li>
+                <span class="texto-bold">"nome"</span>: obrigatorio contendo mais de 2 palavras
+              </li>
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li>
+                <span class="texto-bold">"email"</span>: não obrigatorio, precisa conter @ e "." ex: exemplo@exemplo.com
+              </li>
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li>
+                <span class="texto-bold">"telefone"</span>: não obrigatorio, ddd+número contendo 11 caracteres ex:
+                22555554444
+              </li>
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li>
+                <span class="texto-bold">"genero"</span>: não obrigatorio
+              </li>
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li>
+                <span class="texto-bold">"plano"</span>: não obrigatorio, padrão: "mediquo"
+              </li>
+            </h2>
+            <h2 class="mx-3 fs-6 text-muted">
+              <li>
+                <span class="texto-bold">"departamento"</span>: não obrigatorio
+              </li>
+            </h2>
+          </div>
+          <a class="link-download-exemplo-upload-licencas mb-2" href="./assets/exemplos/exemplo.csv">Baixar exemplo</a>
+          <p>Exemplo:</p>
+          <img src="./assets/images/exemploedicao.png">
+          <div class="mt-4 d-flex flex-row">
+            <a class="botao-envio-licencas botao-ativacao-licenca col-3" href="./ativacaolicensas">Ativação de licenças</a>
+            <a class="botao-envio-licencas botao-desativacao-licenca col-3" href="./desativacaolicensas">Desativação de licenças</a>
+         </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- BOOTSTRAP -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+  <!-- JQUERY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+    integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+  <!-- SCRIPTS -->
+  <script>
+    $(document).ready(function () {
+      $("#sidemenu").load("./layout/side-menu.html");
+      $.getScript("./assets/js/side-menu.js");
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,191 @@
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mediquo</title>
+  <!-- BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link rel="stylesheet" href="./assets/css/side-menu.css" />
+</head>
+
+<body>
+  <div class="wrapper d-flex">
+    <aside id="sidemenu">
+      <!-- IMPORT JS -->
+    </aside>
+
+    <main class="container-lg container-main">
+      <div class="license">
+        <div class="card p-4 border-0 rounded-4 px-5 py-4 shadow-lg my-5">
+          <div class="header-license mb-3 border-bottom">
+            <div class="d-flex justify-content-between w-100">
+              <a href="./uploadlicensas" class="texto-voltar text-decoration-none"><i class="fas fa-chevron-left"></i>
+                Voltar
+              </a>
+              <a href="./uploadlicensas" class="link-para-icon-ajuda d-flex">
+                <i class="fa fa-question icon-ajuda-planilha-licensas" aria-hidden="true"></i>
+                <span>Precisa de ajuda?</span>
+
+              </a>
+            </div>
+            <h1 class="fs-5 mt-3">Enviar planilha de licenças para <span
+                class="texto-ativacao-tela-ativacao-licenca">ativação</span></h1>
+            <h2 class="fs-6 text-muted">
+              Adiciona o arquivo.
+            </h2>
+          </div>
+          <form id="formCompanies" action="#">
+            <div class="row">
+              <div class="mb-3 col-md-5">
+                <label for="inputGroupFile" class="form-label fs-6">Escolha o arquivo</label>
+                <div class="input-group mb-3">
+                  <input type="file" class="form-control validRequiredInput" id="inputGroupFile" />
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="mt-4 pt-3 border-top grupo-btn-clicado">
+            <button id="saveCompanies" class="btn btn-save">
+              Ativar
+            </button>
+            <a href="./uploadlicensas" class="btn btn-outline-success">Cancelar</a>
+          </div>
+          <div id="error-container" class="mt-4"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- BOOTSTRAP -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+  <!-- JQUERY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+    integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- SCRIPTS -->
+  <script>
+    $(document).ready(function () {
+      $("#sidemenu").load("./layout/side-menu.html");
+      $.getScript("./assets/js/side-menu.js");
+
+      $("#documentCompany").mask("99.999.999/9999-99");
+      var botaoValido = true
+      $("#saveCompanies").click(function (event) {
+        event.preventDefault();
+        if (botaoValido) {
+          botaoValido = false
+          var button = this;
+          $(button).addClass("button-desabilitado");
+
+          var count = 3;
+          button.innerText = count;
+
+          var countdownInterval = setInterval(function () {
+            count--;
+
+            if (count < 0) {
+              // Enable the button after 3 seconds
+              clearInterval(countdownInterval);
+              button.innerText = 'Ativar';
+              botaoValido = true
+              // Remove the class after the countdown ends
+              $(button).removeClass("button-desabilitado");
+            } else {
+              button.innerText = count;
+            }
+          }, 1000);
+
+          const formData = new FormData($("#formCompanies")[0]);
+          let error = false;
+          $(".validRequiredInput").each(function () {
+            if (!$(this).val()) {
+              error = true;
+              $(this).addClass("is-invalid");
+            } else {
+              $(this).removeClass("is-invalid");
+            }
+          });
+          if (!error) {
+            const imageFile = $("#inputGroupFile")[0].files[0];
+            formData.append("excelimport", imageFile);
+
+            $.ajax({
+              url: "/api/company/excelimport",
+              type: "POST",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function (result) {
+                console.log(result)
+                // $(".btn-save").prop("disabled", false);
+                // $(".btn-save").html(`Salvar`);
+                Swal.fire({
+                  icon: "success",
+                  title: `${result.message}<br>Linhas processadas: ${result.linhas}`,
+                  showConfirmButton: false,
+                  timer: 5000,
+                }).then(function () {
+                  window.location.reload();
+                });
+              },
+              error: function (result) {
+                $(".btn-save").prop("disabled", false);
+
+                var errorMessage = result.responseJSON.message;
+                var errorLinhas = result.responseJSON.linhas;
+                var errorErrosPacientes = result.responseJSON.errosPacientes;
+                var errorDiv = $("<div>").addClass("error-message my-2")
+
+                if (errorLinhas) {
+                  errorDiv.append($("<p class='linhas-erros border-bottom'>").text("Total de linhas proessadas: " + errorLinhas));
+                }
+                errorDiv.append($("<p class='texto-explicacao mb-2'>").text('O arquivo enviado contem erros que necessitam de correção para o processamento:'));
+
+                var errosPacientesDiv = $("<div>").addClass("erros-pacientes");
+
+                if (result.responseJSON.message) {
+                  errorDiv.append($("<p>").text(`${result.responseJSON.message}`));
+                }
+
+                if (errorErrosPacientes && errorErrosPacientes.length > 0) {
+
+                  errorErrosPacientes.forEach(function (error) {
+                    var errorMessage = error.erro || "Erro indefinido";
+                    var errorPacienteNome = error.paciente || 'Nome indefinido'
+                    var errorP = $("<p>").text("Paciente " + errorPacienteNome + " : " + errorMessage);
+                    errosPacientesDiv.append(errorP);
+                  });
+                  errorDiv.append(errosPacientesDiv);
+                }
+
+                $("#error-container").empty().append(errorDiv);
+                errorDiv.show();
+              },
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Preencha todos os campos!",
+              showConfirmButton: false,
+              timer: 1500000,
+            });
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

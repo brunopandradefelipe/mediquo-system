@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --custom-primary: #000633;
+    --custom-secondary: #ffffff;
+    --cor-click-botao: #14228f;
+    --cor-background-link-navbar: #dd3333;
+    --cor-botao-desativacao: #680808;
+    --cor-botao-ativacao: #073f07;
+    --cor-botao-verificacao: #201d1d;
+    --cor-botao-desabilitado: #e0d3d3;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* PAGE DASHBOARD */
+
+.card-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-image: linear-gradient(134deg, var(--custom-primary) 0%, var(--cor-click-botao) 100%);
+    flex: 1 0 200px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 5px 10px rgb(0 0 0 / 50%);
+    border: none;
+}
+
+.card-info .info-left {
+    display: flex;
+    flex-direction: column;
+    color: var(--custom-secondary);
+    font-weight: 700;
+    align-self: center;
+}
+
+.card-info .info-left i {
+    font-size: 2rem;
+    margin: 10px 0;
+}
+
+.card-info .info-right {
+    color: var(--custom-secondary);
+    border-radius: 1000px;
+    min-width: 100px;
+    min-height: 100px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+/* PAGE USERS */
+.header-users {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #bababa;
+    margin: 20px 0;
+    padding: 20px 10px;
+    gap: 20px;
+}
+
+.group-users {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-new-license,
+#InputSearch {
+    padding: 10px 20px;
+}
+
+/* table */
+.dataTables_processing {
+    margin: auto !important;
+    position: relative !important;
+    top: revert !important;
+    left: revert !important;
+    padding: revert !important;
+    width: 100% !important;
+}
+
+
+/* Botão voltar */
+.texto-voltar {
+    color: var(--custom-primary);
+}
+.texto-voltar:hover{
+    color: var(--cor-click-botao);
+}
+
+/* Todos os botões */
+.btn {
+    color: var(--custom-secondary);
+    background-color: var(--custom-primary);
+    border: 1px solid var(--custom-primary);
+}
+
+.btn:hover {
+    color: var(--custom-primary);
+    background-color: var(--custom-secondary);
+    border: 1px solid var(--custom-primary);
+}
+
+.grupo-btn-clicado .btn:active {
+    color: var(--custom-secondary);
+    background-color: var(--cor-click-botao);
+    border: 1px solid var(--cor-click-botao);
+}
+
+/* Login */
+.card input:focus,
+.selecionar-opcao:focus {
+    border: 1px solid var(--custom-primary);
+    box-shadow: none;
+}
+
+.card {
+    border: 1px solid var(--custom-primary);
+}
+
+.card a {
+    /* color: var(--custom-primary); */
+}
+
+.logo-mediquo {
+    width: 100%;
+}
+
+.tilte-card {
+    width: 438px;
+}
+.tilte-card img {
+    width: 200px;
+}
+
+.botao-envio-licencas{
+    border-radius: 20px;
+    padding: 6px 0;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+}
+.botao-ativacao-licenca{
+    background-color: var(--cor-botao-ativacao);
+    color: var(--custom-secondary);
+    border: 1px solid var(--cor-botao-ativacao);
+
+}
+.botao-desativacao-licenca{
+    background-color: var(--cor-botao-desativacao);
+    color: var(--custom-secondary);
+    border: 1px solid var(--cor-botao-desativacao);
+}
+.botao-desativacao-licenca:hover{
+    background-color: var(--custom-secondary);
+    color: var(--cor-botao-desativacao);
+}
+.botao-verificacao-licenca{
+    background-color: var(--custom-secondary);
+    color: var(--cor-botao-verificacao);
+    border: 1px solid var(--cor-botao-verificacao);
+}
+.botao-verificacao-licenca:hover{
+    background-color: var(--cor-botao-verificacao);
+    color: var(--custom-secondary);
+}
+.botao-envio-licencas:not(:first-child){
+    margin: 0 0 0 15px;
+}
+.botao-ativacao-licenca:hover{
+    background-color: var(--custom-secondary);
+    color: var(--cor-botao-ativacao);
+}
+.texto-ativacao-tela-ativacao-licenca{
+    color: var(--cor-botao-ativacao);
+}
+.texto-desativacao-tela-desativacao-licenca{
+    color: var(--cor-botao-desativacao);
+}
+.error-message {
+    display: none;
+    /* Add any additional styling for the error message */
+    color: red;
+}
+.error-message .linhas-erros, .texto-explicacao{
+    color: black;
+}
+.button-desabilitado{
+    color: var(--cor-botao-desabilitado);
+    border-color: var(--cor-botao-desabilitado);
+    background-color: var(--custom-secondary);
+}
+.button-desabilitado:hover{
+    color: var(--cor-botao-desabilitado);
+    border-color: var(--cor-botao-desabilitado);
+    background-color: var(--custom-secondary);
+    cursor: auto;
+}
+.button-desabilitado:active{
+    color: var(--cor-botao-desabilitado) !important;
+    border-color: var(--cor-botao-desabilitado) !important;
+    background-color: var(--custom-secondary) !important;
+    cursor: auto !important;
+}
+.link-download-exemplo-upload-licencas{
+    color: var(--cor-click-botao);
+    font-size: 18px;
+}
+
+.link-para-icon-ajuda{
+    text-decoration: none;
+}
+.icon-ajuda-planilha-licensas{
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    color: var(--cor-click-botao);
+    border: 2px solid var(--cor-click-botao);
+    padding: 4px 8px;
+    border-radius: 100%;
+}
+.icon-ajuda-planilha-licensas:hover{
+    cursor: pointer;
+}
+.link-para-icon-ajuda span{
+    margin: 0 0 0 10px;
+    font-size: 20px;
+    color: var(--cor-click-botao);
+}
+.faq-planilhas-licencas .texto-bold{
+    font-weight: bold;
+    font-size: 17px;
+}
+@media screen and (max-width: 552px) {
+    .tilte-card {
+        width: 100%;
+    }
+}

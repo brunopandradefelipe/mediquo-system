@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="norton-safeweb-site-verification" content="tx0boh3mppi4m822mwnv8spqguus7pp0mp8988vluondpuepufn9fmofsv-k9h5xrjsubcez0wseyptj-9t2pg02y1tl3gje5lpmavm0-dwvvmxk99pw9att5tx927sd" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <style>
+        body{
+            background-color: #009fc1;
+            margin: 0;
+            padding: 0;}
+        .img-info{
+            display:block; max-width: 100%; margin: 0 auto; padding: 100px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <img class="img-info" src="/i/sp-technical-domain.png">
+</div>
+</body>
+</html>

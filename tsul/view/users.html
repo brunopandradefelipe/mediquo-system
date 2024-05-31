@@ -1,0 +1,517 @@
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mediquo</title>
+    <!-- BOOTSTRAP -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <!-- FONT AWESOME -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- CSS -->
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/side-menu.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css"
+    />
+    <!-- Inclua o JavaScript do DataTables -->
+  </head>
+
+  <body>
+    <div class="wrapper d-flex">
+      <aside id="sidemenu">
+        <!-- IMPORT JS -->
+      </aside>
+
+      <main class="container-lg container-main">
+        <div class="users mt-5">
+          <div class="header-users">
+            <div class="title">
+              <h1 class="fs-4 m-0 fw-bold">Clientes</h1>
+            </div>
+            <div class="group-users grupo-btn-clicado">
+              <a
+                id="createLicensa"
+                href="./new-license"
+                class="btn d-none fw-semibold btn-new-license text-uppercase"
+                >Criar nova licença</a
+              >
+            </div>
+          </div>
+          <div class="row">
+            <div id="divEnterprises" class="col-md-4 d-none">
+              <label for="InputEmail" class="form-label fs-6">Empresa</label>
+              <select
+                id="selectCompany"
+                name="company_id"
+                class="form-select validRequiredInput"
+              ></select>
+            </div>
+            <div class="col-md-3">
+              <label for="InputSearch" class="form-label fs-6">Chave:</label>
+              <input
+                type="search"
+                id="InputSearch"
+                class="form-control selecionar-opcao"
+              />
+            </div>
+            <div class="col-md-2 grupo-btn-clicado">
+              <button class="btn btn-search mt-4">Pesquisar</button>
+            </div>
+          </div>
+          <div class="table-users table-responsive">
+            <table
+              class="table table-striped table-hover display w-100"
+              id="dataTableUsers"
+            >
+              <thead>
+                <tr>
+                  <th>CPF/Chave</th>
+                  <th>Nome</th>
+                  <th>Telefone</th>
+                  <th>Email</th>
+                  <th>Cargo</th>
+                  <th>Resgatado</th>
+                  <th>Status</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Os dados da DataTable serão preenchidos aqui dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- BOOTSTRAP -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+    <!-- JQUERY -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+      integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <!-- SCRIPTS -->
+    <script>
+      var saveCompany;
+      var globalCompanySelected;
+      $(document).ready(function () {
+        $("#sidemenu").load("./layout/side-menu.html?version=1");
+        $.getScript("./assets/js/side-menu.js");
+
+        let currentPage = 1;
+        let totalPages = 1;
+        let classDefination = "";
+        $.ajax({
+          url: "/api/company/",
+          type: "GET",
+          dataType: "json",
+          contentType: "application/json", // Defina o cabeçalho Content-Type como application/json
+          success: function (result) {
+            const dataResultCompany = result;
+            $.ajax({
+              url: "/api/users/getuser",
+              type: "GET",
+              success: function (result) {
+                saveCompany = result.master_company;
+                if (result.master_company == true) {
+                  classDefination = "d-none";
+                  $("#divEnterprises").removeClass("d-none");
+                  console.log("chegou");
+                  if (dataResultCompany.length > 0) {
+                    globalCompanySelected = dataResultCompany[0].company_id;
+                    loadTableData(currentPage, dataResultCompany[0].company_id);
+                  }
+                } else {
+                  loadTableData(currentPage, undefined, "page");
+                  $("#createLicensa").removeClass("d-none");
+                }
+              },
+              error: function (result) {
+                console.log(result);
+              },
+            });
+            let html = `<!--option value="">Selecione</option-->`;
+            const data = result;
+            data.forEach((element) => {
+              html += `<option value="${element.company_id}">${element.company_name}</option>`;
+            });
+            $("#selectCompany").html(html);
+          },
+          error: function (result) {
+            $(".btn-save-license").prop("disabled", false);
+            $(".btn-save-license").html(`Salvar`);
+            Swal.fire({
+              icon: "error",
+              title: result.responseJSON.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+        });
+
+        $("#dataTableUsers").DataTable({
+          destroy: true,
+          pagingType: "simple",
+          pageLength: 15,
+          lengthChange: false,
+          searching: false,
+          ordering: false,
+          processing: true,
+          responsive: true,
+          language: {
+            emptyTable:
+              '<div id="dataTableUsers_processing" class="dataTables_processing" role="status"><div><div></div><div></div><div></div><div></div></div></div>',
+            search: "Pesquisar:",
+            lengthMenu: "Mostrar _MENU_ registros por página",
+            info: "Mostrando _START_ até _END_ de _TOTAL_ registros",
+            infoEmpty: "Mostrando 0 até 0 de 0 registros",
+            infoFiltered: "(filtrados de _MAX_ registros no total)",
+            infoPostFix: "",
+            zeroRecords: "Nenhum registro encontrado",
+            paginate: {
+              first: "Primeiro",
+              previous: "Anterior",
+              next: "Próximo",
+              last: "Último",
+            },
+            aria: {
+              sortAscending:
+                ": Ativar para classificar a coluna em ordem crescente",
+              sortDescending:
+                ": Ativar para classificar a coluna em ordem decrescente",
+            },
+            select: {
+              rows: {
+                _: "%d linhas selecionadas",
+                0: "Nenhuma linha selecionada",
+                1: "1 linha selecionada",
+              },
+            },
+          },
+        });
+
+        //$("#InputSearch").mask("00000000000");
+
+        function EnterKeyPress(event) {
+          if (event.keyCode === 13) {
+            let valSearch = $("#InputSearch").val();
+            globalCompanySelected = $("#selectCompany").val();
+            if (saveCompany === true) {
+              if (valSearch == "") {
+                currentPage = 1;
+                loadTableData(currentPage, globalCompanySelected, "code");
+              } else {
+                loadTableData(valSearch, globalCompanySelected, "code");
+              }
+            } else {
+              if (valSearch == "") {
+                currentPage = 1;
+                loadTableData(currentPage, undefined, "code");
+              } else {
+                loadTableData(valSearch, undefined, "code");
+              }
+            }
+          }
+        }
+
+        $("#InputSearch").on("keyup", EnterKeyPress);
+
+        $(".btn-search").click(function () {
+          globalCompanySelected = $("#selectCompany").val();
+          if (saveCompany === true) {
+            let valSearch = $("#InputSearch").val();
+            if (!valSearch == "") {
+              loadTableData(valSearch, globalCompanySelected, "code");
+            } else {
+              loadTableData(1, globalCompanySelected);
+            }
+          } else {
+            let valSearch = $("#InputSearch").val();
+            if (!valSearch == "") {
+              loadTableData(valSearch, undefined, "code");
+            } else {
+              loadTableData(1, undefined);
+            }
+          }
+        });
+
+        function loadTableData(page, xxx, column = "page") {
+          $.ajax({
+            url: `/api/mediquo/activation-codes/${column}/${page}/${xxx}`,
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+              currentPage = page;
+              totalPages = response.pages;
+              fromPage = response.from_page;
+              toPage = response.to_page;
+              totalLicencas = response.total_licencas;
+
+              $("#dataTableUsers").DataTable({
+                data: response.data,
+                destroy: true,
+                pagingType: "simple",
+                pageLength: 15,
+                lengthChange: false,
+                searching: true,
+                ordering: false,
+                processing: true,
+                responsive: true,
+                language: {
+                  emptyTable:
+                    '<div id="dataTableUsers_processing" class="dataTables_processing" role="status"><div><div></div><div></div><div></div><div></div></div></div>',
+                  search: "Pesquisar:",
+                  lengthMenu: "Mostrar _MENU_ registros por página",
+                  info:
+                    "Mostrando " +
+                    fromPage +
+                    " até " +
+                    toPage +
+                    " de " +
+                    totalLicencas +
+                    "  registros",
+                  infoEmpty: "Mostrando 0 até 0 de 0 registros",
+                  infoFiltered: "(filtrados de _MAX_ registros no total)",
+                  infoPostFix: "",
+                  zeroRecords: "Nenhum registro encontrado",
+                  paginate: {
+                    first: "Primeiro",
+                    previous: "Anterior",
+                    next: "Próximo",
+                    last: "Último",
+                  },
+                  aria: {
+                    sortAscending:
+                      ": Ativar para classificar a coluna em ordem crescente",
+                    sortDescending:
+                      ": Ativar para classificar a coluna em ordem decrescente",
+                  },
+                  select: {
+                    rows: {
+                      _: "%d linhas selecionadas",
+                      0: "Nenhuma linha selecionada",
+                      1: "1 linha selecionada",
+                    },
+                  },
+                },
+                columns: [
+                  {
+                    data: "code",
+                    render: function (data) {
+                      return data.replace(
+                        /(\d{3})(\d{3})(\d{3})(\d{2})/,
+                        "$1.$2.$3-$4"
+                      );
+                    },
+                  },
+                  {
+                    data: null,
+                    render: function (data, type, row) {
+                      return row.first_name + " " + row.last_name;
+                    },
+                  },
+                  {
+                    data: null,
+                    render: function (data, type, row) {
+                      return row.phone_prefix + " " + row.phone_number;
+                    },
+                  },
+                  { data: "email" },
+                  { data: "departament" },
+                  { data: "redemption" },
+                  {
+                    data: "status",
+                    render: function (data, type, row) {
+                      return data ? "Ativo" : "Inativo";
+                    },
+                  },
+                  {
+                    data: "code",
+                    render: function (data, type, row) {
+                      return `
+                                        <div id="checkboxEnterprise" class="form-check form-switch ${classDefination}">
+                                            <input class="form-check-input" type="checkbox" data-code="${data}" role="switch" id="flexSwitchCheckChecked${data}" value="${data}" ${
+                        row.status ? "checked" : ""
+                      }>
+                                        </div>
+                                        `;
+                    },
+                    createdCell: function (td, cellData, rowData, row, col) {
+                      $(td).on("click", 'input[type="checkbox"]', function () {
+                        var checked = $(this).prop("checked");
+                        var code = rowData.code;
+                        var action = checked ? "activate" : "deactivate";
+                        var htmlAction = checked ? "Ativo" : "Inativo";
+                        var url =
+                          "./api/mediquo/activation-codes/" +
+                          code +
+                          "/" +
+                          action;
+
+                        var confirmationMessage = checked
+                          ? "Deseja realmente <strong>ativar</strong> a licença?"
+                          : "Deseja realmente <strong>desativar</strong> a licença?";
+                        var btnMessage = checked ? "ativar" : "desativar";
+
+                        Swal.fire({
+                          title: "Confirmação",
+                          html: confirmationMessage,
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonText: btnMessage,
+                          cancelButtonText: "Cancelar",
+                          confirmButtonColor: "#1b7e6c",
+                          cancelButtonColor: "#d33",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            $(this).prop("disabled", true);
+                            $(this).parent().parent().prev().html(htmlAction);
+                            var $tr = $(this).closest("tr");
+                            var first_name = $tr
+                              .find("td:eq(1)")
+                              .text()
+                              .split(" ")[0];
+                            var last_name = $tr
+                              .find("td:eq(1)")
+                              .text()
+                              .split(" ")[1];
+                            var phone = $tr.find("td:eq(2)").text();
+                            var email = $tr.find("td:eq(3)").text();
+                            var prefix = phone
+                              .replace(/[^\d]/g, "")
+                              .substr(0, 2);
+                            phone = phone.replace(/[^\d]/g, "").substr(2, 13);
+
+                            var dataToSend = {
+                              first_name: first_name,
+                              last_name: last_name,
+                              phone_prefix: phone.replace(/[^\d]/g, ""),
+                              phone_number: prefix,
+                              email: email,
+                            };
+                            $.ajax({
+                              type: "PUT",
+                              url: url,
+                              data: JSON.stringify(dataToSend),
+                              contentType: "application/json",
+                              success: function (response) {
+                                $(".form-check-input").prop("disabled", false);
+                                console.log("Requisição enviada com sucesso.");
+                              },
+                              error: function (xhr, status, error) {
+                                console.error("Erro na requisição:", error);
+                              },
+                            });
+                          } else {
+                            $(this).prop("checked", !checked);
+                          }
+                        });
+                      });
+                    },
+                  },
+                ],
+              });
+
+              $("#dataTableUsers tr td:nth-child(3)").each(function () {
+                $(this).mask("+00 (00) 0 0000-0000");
+              });
+              if (!response.data.length) {
+                $("#dataTableUsers tbody").html(
+                  '<tr><td colspan="7" class="p-3 text-center">Usuário não encontrado!</div></td></tr>'
+                );
+              }
+              // Atualiza o estado dos botões de navegação
+              updatePaginationButtons();
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        }
+
+        // Função para atualizar o estado dos botões de navegação
+        function updatePaginationButtons() {
+          if (currentPage <= 1) {
+            $("#dataTableUsers_previous")
+              .addClass("disabled")
+              .prop("disabled", true);
+          } else {
+            $("#dataTableUsers_previous")
+              .removeClass("disabled")
+              .prop("disabled", false);
+          }
+          if (currentPage >= totalPages) {
+            $("#dataTableUsers_next")
+              .addClass("disabled")
+              .prop("disabled", true);
+          } else {
+            $("#dataTableUsers_next")
+              .removeClass("disabled")
+              .prop("disabled", false);
+          }
+        }
+
+        // Chama a função para carregar a tabela com a página inicial (1)
+        loadTableData(currentPage);
+
+        $(document).on("click", ".paginate_button.previous", function () {
+          $("#dataTableUsers tbody").html('<tr><td colspan="7"></td></tr>');
+          $("#dataTableUsers_processing").appendTo(
+            "#dataTableUsers tbody tr td"
+          );
+          $("#dataTableUsers_processing").css("display", "block");
+          if (saveCompany === true) {
+            if (currentPage > 1) {
+              loadTableData(currentPage - 1, globalCompanySelected);
+            }
+          } else {
+            if (currentPage > 1) {
+              loadTableData(currentPage - 1, undefined);
+            }
+          }
+        });
+
+        $(document).on("click", ".paginate_button.next", function () {
+          $("#dataTableUsers tbody").html('<tr><td colspan="7"></td></tr>');
+          $("#dataTableUsers_processing").appendTo(
+            "#dataTableUsers tbody tr td"
+          );
+          $("#dataTableUsers_processing").css("display", "block");
+          if (saveCompany === true) {
+            if (currentPage < totalPages) {
+              loadTableData(currentPage + 1, globalCompanySelected);
+            }
+          } else {
+            if (currentPage < totalPages) {
+              loadTableData(currentPage + 1, undefined);
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

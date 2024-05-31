@@ -1,0 +1,11 @@
+DB_HOST=localhost
+DB_USER=user
+DB_PASS=senha
+DB_PORT=5432
+DB_NAME=banco
+
+JWT_SECRET=secret
+
+ENDPOINT_MEDIQUO=https://sdk.mediquo.com
+
+CSV_UPLOAD_HOST=
